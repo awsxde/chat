@@ -20,7 +20,10 @@ export function assertChatRoomIsValid(chatRoomRequest: createChatRoomDTO) {
     );
   }
 
-  if (!validationSchema(chatRoomRequest)) {
+  const isValid =
+    validationSchema(chatRoomRequest) && chatRoomRequest.userIds.length > 0;
+
+  if (!isValid) {
     throw new AppError('invalid-chat-room', `Validation failed`, 400, false);
   }
 }
