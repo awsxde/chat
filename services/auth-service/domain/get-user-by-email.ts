@@ -13,11 +13,5 @@ export async function getUserByEmail(email: string) {
     }
   );
 
-  console.log('userVerificationResponse.status');
-  console.log('userVerificationResponse.status');
-  console.log('userVerificationResponse.status');
-  console.log('userVerificationResponse.status');
-  console.log(userVerificationResponse.status);
-
   return userVerificationResponse.data;
 }
