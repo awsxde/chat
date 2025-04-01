@@ -17,6 +17,7 @@ export async function createChatRoom(userIds: number[]) {
 export async function getChatRoomById(id: number) {
   const chatRoom = await getPrismaClient().chatRoom.findUnique({
     where: { id },
+    include: { users: true, messages: true },
   });
 
   return chatRoom;
