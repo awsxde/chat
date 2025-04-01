@@ -29,11 +29,6 @@ export default function defineRoutes(expressApp: express.Application) {
     try {
       logger.info(`Chat API: Fetching chat room with ID ${req.params.id}`);
       const chatRoom = await getChatRoom(parseInt(req.params.id, 10));
-
-      if (!chatRoom) {
-        return res.status(404).json({ error: 'Chat room not found' });
-      }
-
       return res.json(chatRoom);
     } catch (error) {
       next(error);

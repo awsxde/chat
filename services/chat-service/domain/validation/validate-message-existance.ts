@@ -7,7 +7,7 @@ export async function throwIfMessageNotExists(id: number) {
     throw new AppError(
       'message-does-not-exists',
       `The message with id ${id} does not exists`,
-      400,
+      404,
       false
     );
   }

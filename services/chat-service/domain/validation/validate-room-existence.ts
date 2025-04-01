@@ -7,7 +7,7 @@ export async function throwIfChatRoomNotExists(id: number) {
     throw new AppError(
       'chat-room-does-not-exists',
       `The chat room with id ${id} does not exists`,
-      400,
+      404,
       false
     );
   }

@@ -1,6 +1,6 @@
 import { getPrismaClient } from './prisma-client-factory';
 
-// ✅ Create a new chat room with multiple users
+// Create a new chat room with multiple users
 export async function createChatRoom(userIds: number[]) {
   const newChatRoom = await getPrismaClient().chatRoom.create({
     data: {
@@ -13,17 +13,16 @@ export async function createChatRoom(userIds: number[]) {
   return newChatRoom;
 }
 
-// ✅ Get a chat room by ID (with users & messages)
-export async function getChatRoomById(chatRoomId: number) {
+// Get a chat room by ID
+export async function getChatRoomById(id: number) {
   const chatRoom = await getPrismaClient().chatRoom.findUnique({
-    where: { id: chatRoomId },
-    include: { users: true, messages: true },
+    where: { id },
   });
 
   return chatRoom;
 }
 
-// ✅ Add a user to a chat room
+// Add a user to a chat room
 export async function addUserToChatRoom(chatRoomId: number, userId: number) {
   const updatedChatRoom = await getPrismaClient().chatRoom.update({
     where: { id: chatRoomId },
@@ -35,7 +34,7 @@ export async function addUserToChatRoom(chatRoomId: number, userId: number) {
   return updatedChatRoom;
 }
 
-// ✅ Remove a user from a chat room
+// Remove a user from a chat room
 export async function removeUserFromChatRoom(
   chatRoomId: number,
   userId: number
@@ -50,7 +49,7 @@ export async function removeUserFromChatRoom(
   return updatedChatRoom;
 }
 
-// ✅ Send a message in a chat room
+// Send a message in a chat room
 export async function sendMessage(
   chatRoomId: number,
   senderId: number,
@@ -67,7 +66,7 @@ export async function sendMessage(
   return newMessage;
 }
 
-// ✅ Get all messages in a chat room (ordered by creation time)
+// Get all messages in a chat room (ordered by creation time)
 export async function getMessages(chatRoomId: number) {
   const messages = await getPrismaClient().message.findMany({
     where: { chatRoomId },
@@ -77,7 +76,7 @@ export async function getMessages(chatRoomId: number) {
   return messages;
 }
 
-// ✅ Get message in a chat room
+// Get message in a chat room
 export async function getMessage(messageId: number) {
   const messages = await getPrismaClient().message.findMany({
     where: { id: messageId },
@@ -87,7 +86,7 @@ export async function getMessage(messageId: number) {
   return messages;
 }
 
-// ✅ Delete a message
+// Delete a message
 export async function deleteMessage(messageId: number) {
   const deletedMessage = await getPrismaClient().message.delete({
     where: { id: messageId },
@@ -96,7 +95,7 @@ export async function deleteMessage(messageId: number) {
   return deletedMessage;
 }
 
-// ✅ Delete a chat room
+// Delete a chat room
 export async function deleteChatRoom(chatRoomId: number) {
   const deletedChatRoom = await getPrismaClient().chatRoom.delete({
     where: { id: chatRoomId },
