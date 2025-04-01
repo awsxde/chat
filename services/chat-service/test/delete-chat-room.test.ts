@@ -60,7 +60,7 @@ describe('deleteChatRoom', () => {
 
   test('should throw an error when the chat room does not exist', async () => {
     // Arrange
-    const chatRoomId = 2;
+    const chatRoomId = -1;
 
     // Act
     const response = await axiosAPIClient.delete(`/chat-rooms/${chatRoomId}`);
