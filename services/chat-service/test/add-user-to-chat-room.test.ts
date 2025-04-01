@@ -57,7 +57,7 @@ describe('deleteChatRoom', () => {
     expect(response.status).toBe(200);
   });
 
-  test('When adding a user to non-existent chat room, Then it should return 404', async () => {
+  test('When adding a non-existent user to chat room, Then it should return 404', async () => {
     // Create user
     const userToAdd = {
       email: testHelpers.generateValidEmail(),
@@ -78,6 +78,27 @@ describe('deleteChatRoom', () => {
     // Act
     const response = await axiosAPIClient.post(
       `/chat-rooms/${chatRoomId}/users/${invalidUserId}`
+    );
+
+    // Assert
+    expect(response.status).toBe(404);
+  });
+
+  test('When adding a user to non-existent chat room, Then it should return 404', async () => {
+    // Create user
+    const userToAdd = {
+      email: testHelpers.generateValidEmail(),
+      password: 'StrongPass123!',
+    };
+    const {
+      data: { id: addedUserId },
+    } = await axiosAPIClient.post('http://localhost:3001/user', userToAdd);
+
+    const invalidChatRoomId = -1;
+
+    // Act
+    const response = await axiosAPIClient.post(
+      `/chat-rooms/${invalidChatRoomId}/users/${addedUserId}`
     );
 
     // Assert
