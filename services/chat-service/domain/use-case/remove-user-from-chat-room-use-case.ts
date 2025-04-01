@@ -6,7 +6,7 @@ export async function removeUserFromChatRoom(
   chatRoomId: number,
   userId: number
 ) {
-  throwIfChatRoomNotExists(chatRoomId);
+  await throwIfChatRoomNotExists(chatRoomId);
   await getUserById(userId);
 
   const response = await chatRepository.removeUserFromChatRoom(
