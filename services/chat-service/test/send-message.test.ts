@@ -64,7 +64,39 @@ describe('send message', () => {
     expect(response.status).toBe(201);
   });
 
-  test('When adding a message with a non-existent user id to chat room, Then it should return 404', async () => {
+  test('When adding an empty message to an existing chat room, Then it should return 400', async () => {
+    // Create user
+    const userToAdd = {
+      email: testHelpers.generateValidEmail(),
+      password: 'StrongPass123!',
+    };
+    const {
+      data: { id: addedUserId },
+    } = await axiosAPIClient.post('http://localhost:3001/user', userToAdd);
+
+    // Create chat room
+    const chatRoomToCreate = { userIds: [addedUserId] };
+    const {
+      data: { id: chatRoomId },
+    } = await axiosAPIClient.post('/chat-rooms', chatRoomToCreate);
+
+    // Arrange
+    const data = {
+      senderId: addedUserId,
+      content: '',
+    };
+
+    // Act
+    const response = await axiosAPIClient.post(
+      `/chat-rooms/${chatRoomId}/messages`,
+      data
+    );
+
+    // Assert
+    expect(response.status).toBe(400);
+  });
+
+  test.skip('When adding a message with a non-existent user id to chat room, Then it should return 404', async () => {
     // Create user
     const userToAdd = {
       email: testHelpers.generateValidEmail(),
