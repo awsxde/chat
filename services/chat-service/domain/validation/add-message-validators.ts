@@ -1,17 +1,16 @@
 import { AppError } from '@practica/error-handling';
 import ajv from '@practica/validation';
 import { ValidateFunction } from 'ajv';
-import { createMessageDTO, messageSchema } from '../chat-schema';
-import { getUserById } from '../get-user-by-id';
+import { createMessageDTO, createMessageSchema } from '../chat-schema';
 import { throwIfContentInvalid } from './validate-message-content';
 
 export async function assertMessageIsValid(messageRequest: createMessageDTO) {
   // Since compiling a validation schema is expensive, we always try to use the cached version first
   let validationSchema!: ValidateFunction<createMessageDTO> | undefined;
-  validationSchema = ajv.getSchema<createMessageDTO>('message');
+  validationSchema = ajv.getSchema<createMessageDTO>('create-message');
   if (!validationSchema) {
-    ajv.addSchema(messageSchema, 'message');
-    validationSchema = ajv.getSchema<createMessageDTO>('message');
+    ajv.addSchema(createMessageSchema, 'create-message');
+    validationSchema = ajv.getSchema<createMessageDTO>('create-message');
   }
 
   if (validationSchema === undefined) {
@@ -25,10 +24,9 @@ export async function assertMessageIsValid(messageRequest: createMessageDTO) {
 
   const isValid =
     validationSchema(messageRequest) &&
-    (await getUserById(messageRequest.senderId)) &&
     throwIfContentInvalid(messageRequest.content);
 
   if (!isValid) {
-    throw new AppError('invalid-user', `Validation failed`, 400, false);
+    throw new AppError('invalid-message', `Validation failed`, 400, false);
   }
 }

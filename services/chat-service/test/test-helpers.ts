@@ -30,3 +30,8 @@ export const exampleSecret = 'just-a-default-secret';
 export function generateValidEmail() {
   return faker.internet.email();
 }
+
+// Helper function to generate a message
+export function generateMessage() {
+  return faker.lorem.text();
+}
