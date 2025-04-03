@@ -79,9 +79,8 @@ export async function getMessages(chatRoomId: number) {
 
 // Get message in a chat room
 export async function getMessage(messageId: number) {
-  const messages = await getPrismaClient().message.findMany({
+  const messages = await getPrismaClient().message.findUnique({
     where: { id: messageId },
-    orderBy: { createdAt: 'asc' },
   });
 
   return messages;

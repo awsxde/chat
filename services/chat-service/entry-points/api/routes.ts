@@ -106,7 +106,10 @@ export default function defineRoutes(expressApp: express.Application) {
       logger.info(
         `Chat API: Deleting a message with ID ${req.params.messageId}`
       );
-      const messages = await deleteMessage(parseInt(req.params.messageId, 10));
+      const messages = await deleteMessage(
+        parseInt(req.params.id, 10),
+        parseInt(req.params.messageId, 10)
+      );
       return res.json(messages);
     } catch (error) {
       next(error);
