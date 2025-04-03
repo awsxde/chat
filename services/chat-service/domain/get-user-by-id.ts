@@ -20,9 +20,7 @@ export async function getUserById(id: number) {
           false
         );
       }
-
-      throw error; // Re-throw other errors
     });
 
-  return userVerificationResponse.data;
+  return userVerificationResponse!.data;
 }
