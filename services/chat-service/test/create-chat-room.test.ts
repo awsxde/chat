@@ -76,10 +76,12 @@ describe('/api/chat', () => {
       expect(receivedAPIResponse.status).toBe(400);
     });
 
-    test.skip('When user does not exist, Then should return 404 error', async () => {
+    test('When user does not exist, Then should return 404 error', async () => {
+      const invalidUSerId = -1;
+
       // Arrange
       const chatRoomToCreate = {
-        userIds: [0],
+        userIds: [invalidUSerId],
       };
 
       // Act
