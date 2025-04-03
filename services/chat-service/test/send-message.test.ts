@@ -96,7 +96,7 @@ describe('send message', () => {
     expect(response.status).toBe(400);
   });
 
-  test.skip('When adding a message with a non-existent user id to chat room, Then it should return 404', async () => {
+  test('When adding a message with a non-existent user id to chat room, Then it should return 404', async () => {
     // Create user
     const userToAdd = {
       email: testHelpers.generateValidEmail(),
