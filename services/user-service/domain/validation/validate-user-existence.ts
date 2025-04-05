@@ -21,7 +21,7 @@ export async function throwIfEmailNotExists(email: string) {
     throw new AppError(
       'user-does-not-exists',
       `The user with email ${email} does not exists`,
-      400,
+      404,
       false
     );
   }
