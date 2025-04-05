@@ -3,6 +3,7 @@ import { getUserByEmail, getUserById } from '../../data-access/user-repository';
 
 export async function throwIfEmailExists(email: string) {
   const user = await getUserByEmail(email);
+
   if (user) {
     throw new AppError(
       'user-already-exists',
@@ -15,6 +16,7 @@ export async function throwIfEmailExists(email: string) {
 
 export async function throwIfEmailNotExists(email: string) {
   const user = await getUserByEmail(email);
+
   if (!user) {
     throw new AppError(
       'user-does-not-exists',
@@ -27,6 +29,7 @@ export async function throwIfEmailNotExists(email: string) {
 
 export async function throwIfIdNotExists(id: number) {
   const user = await getUserById(id);
+
   if (!user) {
     throw new AppError(
       'user-does-not-exist',
