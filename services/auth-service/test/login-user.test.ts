@@ -20,77 +20,69 @@ beforeAll(async () => {
     },
   };
   axiosAPIClient = axios.create(axiosConfig);
-
-  // ️️️✅ Best Practice: Ensure that this component is isolated by preventing unknown calls
-  // nock.disableNetConnect();
-  // nock.enableNetConnect('127.0.0.1');
 });
 
 beforeEach(() => {
   // ️️️✅ Best Practice: Start each test with a clean slate
-  // nock.cleanAll();
   sinon.restore();
 });
 
 afterAll(async () => {
-  // nock.enableNetConnect();
   stopWebServer();
 });
 
-// ️️️✅ Best Practice: Structure tests by routes and stories
-describe('/auth', () => {
-  describe('POST /login', () => {
-    // ️️️✅ Best Practice: Check the response
-    test('When logging a user, Then should get back approval with 200 response', async () => {
-      // Arrange
-      const userToAdd = {
-        email: testHelpers.generateValidEmail(),
-        password: 'StrongPass123!',
-      };
+describe('POST /auth/login', () => {
+  test('When logging as a user should return 200', async () => {
+    // Create a user
+    const userToAdd = {
+      email: testHelpers.generateValidEmail(),
+      password: 'StrongPass123!',
+    };
 
-      // Act
-      await axiosAPIClient.post('http://localhost:3001/user', userToAdd);
-      const { status } = await axiosAPIClient.post('/auth/login', userToAdd);
+    await axiosAPIClient.post('http://localhost:3001/user', userToAdd);
 
-      // Assert
-      expect(status).toBe(200);
-    });
+    // Login as user
+    const response = await axiosAPIClient.post('/auth/login', userToAdd);
 
-    test.skip('When user does not exist, throw error on login', async () => {
-      // Arrange
-      const userToLogin = {
-        email: 'weak',
-        password: 'StrongPass123!',
-      };
+    // Check status
+    expect(response.status).toBe(200);
+  });
 
-      // Act
-      const { status } = await axiosAPIClient.post('/auth/login', userToLogin);
+  test('When user does not exist should throw an error', async () => {
+    // Login as user
+    const userToLogin = {
+      email: 'weak',
+      password: 'StrongPass123!',
+    };
 
-      // Assert
-      expect(status).toBe(400);
-    });
+    const response = await axiosAPIClient.post('/auth/login', userToLogin);
 
-    test('when user exist but password is incorrect, throw error on login', async () => {
-      // Arrange
-      const userEmail = testHelpers.generateValidEmail();
+    // Assert
+    expect(response.status).toBe(404);
+  });
 
-      const userToAdd = {
-        email: userEmail,
-        password: 'StrongPass123!',
-      };
+  test('When user exist but password is incorrect should throw an error', async () => {
+    // Create a user
+    const userToAdd = {
+      email: testHelpers.generateValidEmail(),
+      password: 'StrongPass123!',
+    };
 
-      const userToLogin = {
-        email: userEmail,
-        password: 'StrongPass12345676889!',
-      };
+    const { data: user } = await axiosAPIClient.post(
+      'http://localhost:3001/user',
+      userToAdd
+    );
 
-      // Act
-      await axiosAPIClient.post('http://localhost:3001/user', userToAdd);
-      const { status } = await axiosAPIClient.post('/auth/login', userToLogin);
+    // Login as user
+    const userToLogin = {
+      email: user.email,
+      password: 'StrongPass12345676889!',
+    };
 
-      // Assert
-      expect(status).toBe(400);
-    });
+    const response = await axiosAPIClient.post('/auth/login', userToLogin);
+
+    // Check status
+    expect(response.status).toBe(400);
   });
 });
 
