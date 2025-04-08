@@ -13,12 +13,6 @@ export default function defineRoutes(expressApp: express.Application) {
       );
       // ✅ Best Practice: Using the 3-tier architecture, routes/controller are kept thin, logic is encapsulated in a dedicated domain folder
       const loginUserResponse = await loginUser(req.body);
-
-      if (!loginUserResponse) {
-        res.status(404).end();
-        return;
-      }
-
       return res.json(loginUserResponse);
     } catch (error) {
       next(error);
