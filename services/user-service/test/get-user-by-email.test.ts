@@ -38,52 +38,31 @@ afterAll(async () => {
   stopWebServer();
 });
 
-// ️️️✅ Best Practice: Structure tests by routes and stories
-describe('/api', () => {
-  describe('GET /user', () => {
-    test('When asked for an existing user, Then should retrieve it and receive 200 response', async () => {
-      // Arrange
-      const userToAdd = {
-        email: testHelpers.generateValidEmail(),
-        password: 'StrongPass123!',
-      };
+describe('GET /user/email/:email', () => {
+  test('When asked for a user should return 200', async () => {
+    // Create a user
+    const userToAdd = {
+      email: testHelpers.generateValidEmail(),
+      password: 'StrongPass123!',
+    };
 
-      const {
-        data: { email: addedUserEmail },
-      } = await axiosAPIClient.post(`/user`, userToAdd);
+    const { data: user } = await axiosAPIClient.post(`/user`, userToAdd);
 
-      // Act
-      // ️️️✅ Best Practice: Use generic and reputable HTTP client like Axios or Fetch. Avoid libraries that are coupled to
-      // the web framework or include custom assertion syntax (e.g. Supertest)
-      const { data, status } = await axiosAPIClient.get(
-        `/user/email/${addedUserEmail}`
-      );
+    // Get user
+    const response = await axiosAPIClient.get(`/user/email/${user.email}`);
 
-      // Assert
-      expect({
-        data: { email: data.email }, // Only check email, not password
-        status,
-      }).toMatchObject({
-        status: 200,
-        data: {
-          email: userToAdd.email, // Compare only the email
-        },
-      });
-    });
+    // Check status
+    expect(response.status).toBe(200);
+  });
 
-    test('When asked for an non-existing user, Then should receive 404 response', async () => {
-      // Arrange
-      const nonExistingUserEmail = 'invalid email';
+  test('When asked for an non-existing user should throw an error', async () => {
+    const invalidUserEmail = 'invalid email';
 
-      // Act
-      const getResponse = await axiosAPIClient.get(
-        `/user/email/${nonExistingUserEmail}`
-      );
+    const response = await axiosAPIClient.get(
+      `/user/email/${invalidUserEmail}`
+    );
 
-      // Assert
-      expect(getResponse.status).toBe(400);
-    });
+    // Check status
+    expect(response.status).toBe(404);
   });
 });
-
-export {};

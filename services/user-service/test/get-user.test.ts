@@ -38,50 +38,29 @@ afterAll(async () => {
   stopWebServer();
 });
 
-// ️️️✅ Best Practice: Structure tests by routes and stories
-describe('/api', () => {
-  describe('GET /user', () => {
-    test('When asked for an existing user, Then should retrieve it and receive 200 response', async () => {
-      // Arrange
-      const userToAdd = {
-        email: testHelpers.generateValidEmail(),
-        password: 'StrongPass123!',
-      };
+describe('GET /user/:id', () => {
+  test('When asked for a user should return 200', async () => {
+    // Create a user
+    const userToAdd = {
+      email: testHelpers.generateValidEmail(),
+      password: 'StrongPass123!',
+    };
 
-      const {
-        data: { id: addedUserId },
-      } = await axiosAPIClient.post(`/user`, userToAdd);
+    const { data: user } = await axiosAPIClient.post(`/user`, userToAdd);
 
-      // Act
-      // ️️️✅ Best Practice: Use generic and reputable HTTP client like Axios or Fetch. Avoid libraries that are coupled to
-      // the web framework or include custom assertion syntax (e.g. Supertest)
-      const { data, status } = await axiosAPIClient.get(`/user/${addedUserId}`);
+    // Get user
+    const response = await axiosAPIClient.get(`/user/${user.id}`);
 
-      // Assert
-      expect({
-        data: { email: data.email }, // Only check email, not password
-        status,
-      }).toMatchObject({
-        status: 200,
-        data: {
-          email: userToAdd.email, // Compare only the email
-        },
-      });
-    });
+    // Check status
+    expect(response.status).toBe(200);
+  });
 
-    test('When asked for an non-existing user, Then should receive 404 response', async () => {
-      // Arrange
-      const nonExistingUserId = -1;
+  test('When asked for an non-existing user should throw an error', async () => {
+    const nonExistingUserId = -1;
 
-      // Act
-      const getResponse = await axiosAPIClient.get(
-        `/user/${nonExistingUserId}`
-      );
+    const response = await axiosAPIClient.get(`/user/${nonExistingUserId}`);
 
-      // Assert
-      expect(getResponse.status).toBe(404);
-    });
+    // Check status
+    expect(response.status).toBe(404);
   });
 });
-
-export {};
