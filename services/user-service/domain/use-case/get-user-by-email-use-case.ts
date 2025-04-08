@@ -1,10 +1,17 @@
+import { AppError } from '@practica/error-handling';
 import * as userRepository from '../../data-access/user-repository';
-import { throwIfEmailNotExists } from '../validation/validate-user-existence';
 
 export async function getUserByEmail(email: string) {
-  await throwIfEmailNotExists(email);
-
   const response = await userRepository.getUserByEmail(email);
+
+  if (!response) {
+    throw new AppError(
+      'user-does-not-exists',
+      `The user with email ${email} does not exists`,
+      404,
+      false
+    );
+  }
 
   return response;
 }
