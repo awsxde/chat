@@ -21,6 +21,7 @@ export default function defineRoutes(expressApp: express.Application) {
       return res.status(201).json(chatRoom);
     } catch (error) {
       next(error);
+      return undefined;
     }
   });
 
@@ -56,9 +57,10 @@ export default function defineRoutes(expressApp: express.Application) {
         parseInt(req.params.id, 10),
         parseInt(req.params.userId, 10)
       );
-      return res.status(200).json(result);
+      return res.status(201).json(result);
     } catch (error) {
       next(error);
+      return undefined;
     }
   });
 
@@ -86,6 +88,7 @@ export default function defineRoutes(expressApp: express.Application) {
       return res.status(201).json(message);
     } catch (error) {
       next(error);
+      return undefined;
     }
   });
 
@@ -106,11 +109,11 @@ export default function defineRoutes(expressApp: express.Application) {
       logger.info(
         `Chat API: Deleting a message with ID ${req.params.messageId}`
       );
-      const messages = await deleteMessage(
+      await deleteMessage(
         parseInt(req.params.id, 10),
         parseInt(req.params.messageId, 10)
       );
-      return res.json(messages);
+      return res.status(204).end();
     } catch (error) {
       next(error);
     }
