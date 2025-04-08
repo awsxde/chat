@@ -12,11 +12,7 @@ export async function createChatRoom(newChatRoom: createChatRoomDTO) {
     })
   );
 
-  const finalChatRoomToSave = { ...newChatRoom };
-
-  const response = await chatRepository.createChatRoom(
-    finalChatRoomToSave.userIds
-  );
+  const response = await chatRepository.createChatRoom(newChatRoom.userIds);
 
   return response;
 }
