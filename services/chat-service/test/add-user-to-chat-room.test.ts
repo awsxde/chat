@@ -16,18 +16,13 @@ beforeAll(async () => {
     },
   };
   axiosAPIClient = axios.create(axiosConfig);
-
-  // nock.disableNetConnect();
-  // nock.enableNetConnect('127.0.0.1');
 });
 
 beforeEach(() => {
-  // nock.cleanAll();
   sinon.restore();
 });
 
 afterAll(async () => {
-  // nock.enableNetConnect();
   stopWebServer();
 });
 
