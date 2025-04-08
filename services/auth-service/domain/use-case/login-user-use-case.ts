@@ -5,7 +5,7 @@ import { assertLoginUserIsValid } from '../validation/login-user-validators';
 import { verifyPasswordOrThrow } from '../validation/password-validation';
 
 export async function loginUser(credentials: loginUserDTO) {
-  assertLoginUserIsValid(credentials);
+  await assertLoginUserIsValid(credentials);
   const user = await getUserByEmail(credentials.email);
 
   await verifyPasswordOrThrow(credentials.password, user!.password);
