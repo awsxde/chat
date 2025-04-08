@@ -42,12 +42,6 @@ export default function defineRoutes(expressApp: express.Application) {
     try {
       logger.info(`User API was called to get user by id ${req.params.id}`);
       const result = await getUser(parseInt(req.params.id, 10));
-
-      if (!result) {
-        res.status(404).end();
-        return;
-      }
-
       res.json(result);
     } catch (error) {
       next(error);
@@ -61,12 +55,6 @@ export default function defineRoutes(expressApp: express.Application) {
         `User API was called to get user by email ${req.params.email}`
       );
       const result = await getUserByEmail(req.params.email);
-
-      if (!result) {
-        res.status(404).end();
-        return;
-      }
-
       res.json(result);
     } catch (error) {
       next(error);
@@ -74,10 +62,14 @@ export default function defineRoutes(expressApp: express.Application) {
   });
 
   // delete user by id
-  router.delete('/:id', async (req, res) => {
-    logger.info(`User API was called to delete user ${req.params.id}`);
-    await deleteUser(parseInt(req.params.id, 10));
-    res.status(204).end();
+  router.delete('/:id', async (req, res, next) => {
+    try {
+      logger.info(`User API was called to delete user ${req.params.id}`);
+      await deleteUser(parseInt(req.params.id, 10));
+      res.status(204).end();
+    } catch (error) {
+      next(error);
+    }
   });
 
   expressApp.use('/user', router);

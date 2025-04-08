@@ -38,29 +38,33 @@ afterAll(async () => {
   stopWebServer();
 });
 
-describe('/api', () => {
-  describe('DELETE /user', () => {
-    test('When deleting an existing user, Then it should NOT be retrievable', async () => {
-      // Arrange
-      const userToAdd = {
-        email: testHelpers.generateValidEmail(),
-        password: 'StrongPass123!',
-      };
+describe('DELETE /user/:id', () => {
+  test('When deleting a user it should not exist', async () => {
+    // Create a user
+    const userToAdd = {
+      email: testHelpers.generateValidEmail(),
+      password: 'StrongPass123!',
+    };
 
-      // Act
-      const receivedAPIResponse = await axiosAPIClient.post('/user', userToAdd);
-      const user = receivedAPIResponse.data;
-      await axiosAPIClient.delete(`/user/${user.id}`);
+    const { data: user } = await axiosAPIClient.post('/user', userToAdd);
 
-      // Assert
-      const aQueryForDeletedUser = await axiosAPIClient.get(`/user/${user.id}`);
-      expect(aQueryForDeletedUser.status).toBe(404);
-    });
+    // Delete user
+    await axiosAPIClient.delete(`/user/${user.id}`);
 
-    test.todo(
-      'When deleting an non-existing user, Then should receive 404 response'
-    );
+    // Get same user
+    const response = await axiosAPIClient.get(`/user/${user.id}`);
+
+    // Check status
+    expect(response.status).toBe(404);
+  });
+
+  test('When deleting an non-existing user should throw an error', async () => {
+    const invalidUserId = -1;
+
+    // Delete user
+    const response = await axiosAPIClient.delete(`/user/${invalidUserId}`);
+
+    // Check status
+    expect(response.status).toBe(404);
   });
 });
-
-export {};

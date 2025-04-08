@@ -5,7 +5,9 @@ import { addUserSchema, updateUserDTO } from '../user-schema';
 import { isValidEmail } from './email-validation';
 import { isStrongPassword } from './password-validation';
 
-export function assertUpdateUserIsValid(updateUserRequest: updateUserDTO) {
+export async function assertUpdateUserIsValid(
+  updateUserRequest: updateUserDTO
+) {
   // Since compiling a validation schema is expensive, we always try to use the cached version first
   let validationSchema!: ValidateFunction<updateUserDTO> | undefined;
   validationSchema = ajv.getSchema<updateUserDTO>('update-user');
