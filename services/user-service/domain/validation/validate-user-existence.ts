@@ -14,19 +14,6 @@ export async function throwIfEmailExists(email: string) {
   }
 }
 
-export async function throwIfEmailNotExists(email: string) {
-  const user = await getUserByEmail(email);
-
-  if (!user) {
-    throw new AppError(
-      'user-does-not-exists',
-      `The user with email ${email} does not exists`,
-      404,
-      false
-    );
-  }
-}
-
 export async function throwIfIdNotExists(id: number) {
   const user = await getUserById(id);
 
