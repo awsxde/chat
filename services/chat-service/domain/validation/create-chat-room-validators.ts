@@ -3,7 +3,9 @@ import ajv from '@practica/validation';
 import { ValidateFunction } from 'ajv';
 import { createChatRoomDTO, createChatRoomSchema } from '../chat-schema';
 
-export function assertChatRoomIsValid(chatRoomRequest: createChatRoomDTO) {
+export async function assertChatRoomIsValid(
+  chatRoomRequest: createChatRoomDTO
+) {
   let validationSchema!: ValidateFunction<createChatRoomDTO> | undefined;
   validationSchema = ajv.getSchema<createChatRoomDTO>('new-chat-room');
   if (!validationSchema) {
