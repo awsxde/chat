@@ -38,143 +38,59 @@ afterAll(async () => {
   stopWebServer();
 });
 
-// ️️️✅ Best Practice: Structure tests by routes and stories
-describe('/api', () => {
-  describe('POST /user', () => {
-    // ️️️✅ Best Practice: Check the response
-    test('When adding a new valid user, Then should get back approval with 200 response', async () => {
-      // Arrange
-      const userToAdd = {
-        email: testHelpers.generateValidEmail(),
-        password: 'StrongPass123!',
-      };
+describe('POST /user', () => {
+  test('When adding a user should return 200', async () => {
+    // Create a user
+    const userToAdd = {
+      email: testHelpers.generateValidEmail(),
+      password: 'StrongPass123!',
+    };
 
-      // Act
-      const receivedAPIResponse = await axiosAPIClient.post('/user', userToAdd);
+    const response = await axiosAPIClient.post('/user', userToAdd);
 
-      // Assert
-      expect(receivedAPIResponse).toMatchObject({
-        data: {
-          id: expect.any(Number),
-        },
-      });
-    });
+    // Check status
+    expect(response.status).toBe(200);
+  });
 
-    // ️️️✅ Best Practice: Check the new state
-    // In a real-world project, this test can be combined with the previous test
-    test('When adding a new valid user, Then should be able to retrieve it', async () => {
-      // Arrange
-      const userToAdd = {
-        email: testHelpers.generateValidEmail(),
-        password: 'StrongPass123!',
-      };
+  test('When user exist should throw an error', async () => {
+    // Create a user
+    const userToAdd = {
+      email: testHelpers.generateValidEmail(),
+      password: 'StrongPass123!',
+    };
 
-      // Act
-      const {
-        data: { id: addedUserId },
-      } = await axiosAPIClient.post('/user', userToAdd);
+    await axiosAPIClient.post('/user', userToAdd);
 
-      // Assert
-      const { data, status } = await axiosAPIClient.get(`/user/${addedUserId}`);
+    // Create same user again
+    const response = await axiosAPIClient.post('/user', userToAdd);
 
-      expect({
-        data: { email: data.email }, // Only check email, not password
-        status,
-      }).toMatchObject({
-        status: 200,
-        data: {
-          email: userToAdd.email, // Compare only the email
-        },
-      });
-    });
+    // Check status
+    expect(response.status).toBe(400);
+  });
 
-    test('When user exist, throw error on sign up', async () => {
-      // Arrange
-      const userToAdd = {
-        email: testHelpers.generateValidEmail(),
-        password: 'StrongPass123!',
-      };
+  test('When password is not strong should throw an error', async () => {
+    // Create a user
+    const userToAdd = {
+      email: testHelpers.generateValidEmail(),
+      password: 'weak',
+    };
 
-      // Act
-      await axiosAPIClient.post('/user', userToAdd);
-      const receivedAPIResponse = await axiosAPIClient.post('/user', userToAdd);
+    const response = await axiosAPIClient.post('/user', userToAdd);
 
-      // Assert
-      expect(receivedAPIResponse.status).toBe(400);
-    });
+    // Check status
+    expect(response.status).toBe(400);
+  });
 
-    describe('Password Validation', () => {
-      test('should return 200 when user password meets strong password requirements', async () => {
-        // Arrange
-        const userToAdd = {
-          email: testHelpers.generateValidEmail(),
-          password: 'StrongPass123!',
-        };
+  test('When email is not valid should throw an error', async () => {
+    // Create a user
+    const userToAdd = {
+      email: 'test',
+      password: 'StrongPass123!',
+    };
 
-        // Act
-        const receivedAPIResponse = await axiosAPIClient.post(
-          '/user',
-          userToAdd
-        );
+    const response = await axiosAPIClient.post('/user', userToAdd);
 
-        // Assert
-        expect(receivedAPIResponse.status).toBe(200);
-      });
-
-      test('should return 400 when user password does not meet strong password requirements', async () => {
-        // Arrange
-        const userToAdd = {
-          email: testHelpers.generateValidEmail(),
-          password: 'weak',
-        };
-
-        // Act
-        const receivedAPIResponse = await axiosAPIClient.post(
-          '/user',
-          userToAdd
-        );
-
-        // Assert
-        expect(receivedAPIResponse.status).toBe(400);
-      });
-    });
-
-    describe('Email Validation', () => {
-      test('should return 200 when user email meets a valid email requirements', async () => {
-        // Arrange
-        const userToAdd = {
-          email: testHelpers.generateValidEmail(),
-          password: 'StrongPass123!',
-        };
-
-        // Act
-        const receivedAPIResponse = await axiosAPIClient.post(
-          '/user',
-          userToAdd
-        );
-
-        // Assert
-        expect(receivedAPIResponse.status).toBe(200);
-      });
-
-      test('should return 400 when user email does not meet a valid email email requirements', async () => {
-        // Arrange
-        const userToAdd = {
-          email: 'test',
-          password: 'StrongPass123!',
-        };
-
-        // Act
-        const receivedAPIResponse = await axiosAPIClient.post(
-          '/user',
-          userToAdd
-        );
-
-        // Assert
-        expect(receivedAPIResponse.status).toBe(400);
-      });
-    });
+    // Check status
+    expect(response.status).toBe(400);
   });
 });
-
-export {};

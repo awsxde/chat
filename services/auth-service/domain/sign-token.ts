@@ -4,10 +4,6 @@ export function signValidToken(user, role) {
   return internalSignTokenSynchronously(user, role, Date.now() + 60 * 60);
 }
 
-export function signExpiredToken(user, role) {
-  return internalSignTokenSynchronously(user, role, 0);
-}
-
 function internalSignTokenSynchronously(user, roles, expirationInUnixTime) {
   const token = jwt.sign(
     {
