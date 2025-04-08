@@ -49,7 +49,7 @@ describe('deleteChatRoom', () => {
     );
 
     // Assert
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(201);
   });
 
   test('When adding a non-existent user to chat room, Then it should return 404', async () => {
