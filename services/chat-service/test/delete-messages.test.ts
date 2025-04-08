@@ -16,18 +16,13 @@ beforeAll(async () => {
     },
   };
   axiosAPIClient = axios.create(axiosConfig);
-
-  // nock.disableNetConnect();
-  // nock.enableNetConnect('127.0.0.1');
 });
 
 beforeEach(() => {
-  // nock.cleanAll();
   sinon.restore();
 });
 
 afterAll(async () => {
-  // nock.enableNetConnect();
   stopWebServer();
 });
 
@@ -63,7 +58,7 @@ describe('send message', () => {
     );
 
     // Assert
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(204);
   });
 
   test('should throw an error when the message does not exist', async () => {
