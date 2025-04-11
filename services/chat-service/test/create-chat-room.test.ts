@@ -16,84 +16,64 @@ beforeAll(async () => {
     },
   };
   axiosAPIClient = axios.create(axiosConfig);
-
-  // nock.disableNetConnect();
-  // nock.enableNetConnect('127.0.0.1');
 });
 
 beforeEach(() => {
-  // nock.cleanAll();
   sinon.restore();
 });
 
 afterAll(async () => {
-  // nock.enableNetConnect();
   stopWebServer();
 });
 
-describe('/api/chat', () => {
-  describe('POST /chat', () => {
-    test('When creating a new valid chat room, Then should get back approval with 201 response', async () => {
-      // Arrange
-      const userToAdd = {
-        email: testHelpers.generateValidEmail(),
-        password: 'StrongPass123!',
-      };
+describe('POST /chat-rooms', () => {
+  test('When creating a chat room should return 201', async () => {
+    // Create a user
+    const userToAdd = {
+      email: testHelpers.generateValidEmail(),
+      password: 'StrongPass123!',
+    };
 
-      // Act
-      const {
-        data: { id: addedUserId },
-      } = await axiosAPIClient.post('http://localhost:3001/user', userToAdd);
+    const { data: user } = await axiosAPIClient.post(
+      'http://localhost:3001/user',
+      userToAdd
+    );
 
-      // Arrange
-      const chatRoomToCreate = {
-        userIds: [addedUserId],
-      };
+    // Create a chat room
+    const chatRoomToCreate = {
+      userIds: [user.id],
+    };
 
-      // Act
-      const receivedAPIResponse = await axiosAPIClient.post(
-        '/chat-rooms',
-        chatRoomToCreate
-      );
+    const response = await axiosAPIClient.post('/chat-rooms', chatRoomToCreate);
 
-      // Assert
-      expect(receivedAPIResponse.status).toBe(201);
-    });
+    // Check status
+    expect(response.status).toBe(201);
+  });
 
-    test('When creating a chat room without users, Then should get 400 response', async () => {
-      // Arrange
-      const chatRoomToCreate = {
-        userIds: [],
-      };
+  test('When creating a chat room without users should throw an error', async () => {
+    // Create a chat room
+    const chatRoomToCreate = {
+      userIds: [],
+    };
 
-      // Act
-      const receivedAPIResponse = await axiosAPIClient.post(
-        '/chat-rooms',
-        chatRoomToCreate
-      );
+    const response = await axiosAPIClient.post('/chat-rooms', chatRoomToCreate);
 
-      // Assert
-      expect(receivedAPIResponse.status).toBe(400);
-    });
+    // Check status
+    expect(response.status).toBe(400);
+  });
 
-    test('When user does not exist, Then should return 404 error', async () => {
-      const invalidUSerId = -1;
+  test('When creating a chat room with invalid users should throw an error', async () => {
+    const invalidUSerId = -1;
 
-      // Arrange
-      const chatRoomToCreate = {
-        userIds: [invalidUSerId],
-      };
+    // Create a chat room
+    const chatRoomToCreate = {
+      userIds: [invalidUSerId],
+    };
 
-      // Act
-      const receivedAPIResponse = await axiosAPIClient.post(
-        '/chat-rooms',
-        chatRoomToCreate
-      );
+    // Act
+    const response = await axiosAPIClient.post('/chat-rooms', chatRoomToCreate);
 
-      // Assert
-      expect(receivedAPIResponse.status).toBe(404);
-    });
+    // Assert
+    expect(response.status).toBe(404);
   });
 });
-
-export {};

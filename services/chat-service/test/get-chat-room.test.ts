@@ -16,53 +16,53 @@ beforeAll(async () => {
     },
   };
   axiosAPIClient = axios.create(axiosConfig);
-
-  // nock.disableNetConnect();
-  // nock.enableNetConnect('127.0.0.1');
 });
 
 beforeEach(() => {
-  // nock.cleanAll();
   sinon.restore();
 });
 
 afterAll(async () => {
-  // nock.enableNetConnect();
   stopWebServer();
 });
 
-describe('deleteChatRoom', () => {
-  test('When asked for an existing chat room, Then should retrieve it and receive 200 response', async () => {
-    // Create user
+describe('get /chat-rooms/:id', () => {
+  test('When asked for a chat room should return 200', async () => {
+    // Create a user
     const userToAdd = {
       email: testHelpers.generateValidEmail(),
       password: 'StrongPass123!',
     };
-    const {
-      data: { id: addedUserId },
-    } = await axiosAPIClient.post('http://localhost:3001/user', userToAdd);
 
-    // Create chat room
-    const chatRoomToCreate = { userIds: [addedUserId] };
-    const {
-      data: { id: chatRoomId },
-    } = await axiosAPIClient.post('/chat-rooms', chatRoomToCreate);
+    const { data: user } = await axiosAPIClient.post(
+      'http://localhost:3001/user',
+      userToAdd
+    );
+
+    // Create a chat room
+    const chatRoomToCreate = {
+      userIds: [user.id],
+    };
+
+    const { data: chatRoom } = await axiosAPIClient.post(
+      '/chat-rooms',
+      chatRoomToCreate
+    );
 
     // Get the chat room
-    const response = await axiosAPIClient.get(`/chat-rooms/${chatRoomId}`);
+    const response = await axiosAPIClient.get(`/chat-rooms/${chatRoom.id}`);
 
-    // Assertions
+    // Check status
     expect(response.status).toBe(200);
   });
 
   test('should throw an error when the chat room does not exist', async () => {
-    // Arrange
+    // Get the chat room
     const chatRoomId = -1;
 
-    // Act
     const response = await axiosAPIClient.get(`/chat-rooms/${chatRoomId}`);
 
-    // Assert
+    // Check status
     expect(response.status).toBe(404);
   });
 });
