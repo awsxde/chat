@@ -9,6 +9,8 @@ export const createChatRoomSchema = Type.Omit(chatRoomSchema, ['id']);
 
 export type createChatRoomDTO = Static<typeof createChatRoomSchema>;
 
+export type updateChatRoomDTO = Static<typeof chatRoomSchema>;
+
 export const messageSchema = Type.Object({
   id: Type.Integer(),
   senderId: Type.Integer(),

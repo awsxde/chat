@@ -12,7 +12,7 @@ export async function createChatRoom(newChatRoom: createChatRoomDTO) {
     })
   );
 
-  const response = await chatRepository.createChatRoom(newChatRoom.userIds);
+  const response = await chatRepository.createChatRoom(newChatRoom);
 
   return response;
 }

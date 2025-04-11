@@ -1,7 +1,6 @@
 import { logger } from '@practica/logger';
 import express from 'express';
 import util from 'util';
-import { addUserToChatRoom } from '../../domain/use-case/add-user-to-chat-room-use-case';
 import { createChatRoom } from '../../domain/use-case/create-chat-room-use-case';
 import { deleteChatRoom } from '../../domain/use-case/delete-chat-room-use-case';
 import { deleteMessage } from '../../domain/use-case/delete-message-use-case';
@@ -9,6 +8,7 @@ import { getChatRoom } from '../../domain/use-case/get-chat-room-use-case';
 import { getMessages } from '../../domain/use-case/get-messages-use-case';
 import { removeUserFromChatRoom } from '../../domain/use-case/remove-user-from-chat-room-use-case';
 import { sendMessage } from '../../domain/use-case/send-message-use-case';
+import { updateChatRoom } from '../../domain/use-case/update-chat-room-use-case';
 
 export default function defineRoutes(expressApp: express.Application) {
   const router = express.Router();
@@ -19,6 +19,18 @@ export default function defineRoutes(expressApp: express.Application) {
       logger.info(`Chat API: Creating a chat room ${util.inspect(req.body)}`);
       const chatRoom = await createChatRoom(req.body);
       return res.status(201).json(chatRoom);
+    } catch (error) {
+      next(error);
+      return undefined;
+    }
+  });
+
+  // Update a chat room
+  router.put('/:id', async (req, res, next) => {
+    try {
+      logger.info(`Chat API: Updating a chat room ${util.inspect(req.body)}`);
+      const chatRoom = await updateChatRoom(req.body);
+      return res.status(200).json(chatRoom);
     } catch (error) {
       next(error);
       return undefined;
@@ -44,23 +56,6 @@ export default function defineRoutes(expressApp: express.Application) {
       return res.status(204).end();
     } catch (error) {
       next(error);
-    }
-  });
-
-  // Add a user to a chat room
-  router.post('/:id/users/:userId', async (req, res, next) => {
-    try {
-      logger.info(
-        `Chat API: Adding user ${req.params.userId} to chat room ${req.params.id}`
-      );
-      const result = await addUserToChatRoom(
-        parseInt(req.params.id, 10),
-        parseInt(req.params.userId, 10)
-      );
-      return res.status(201).json(result);
-    } catch (error) {
-      next(error);
-      return undefined;
     }
   });
 

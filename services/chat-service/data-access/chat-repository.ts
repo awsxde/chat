@@ -1,16 +1,37 @@
 import { getPrismaClient } from './prisma-client-factory';
 
+type chatRoomRecord = {
+  id: number;
+  userIds: number[];
+};
+
 // Create a new chat room with multiple users
-export async function createChatRoom(userIds: number[]) {
+export async function createChatRoom(
+  newChatRoomRequest: Omit<chatRoomRecord, 'id'>
+) {
   const newChatRoom = await getPrismaClient().chatRoom.create({
     data: {
       users: {
-        connect: userIds.map((id) => ({ id })),
+        connect: newChatRoomRequest.userIds.map((id) => ({ id })),
       },
     },
   });
 
   return newChatRoom;
+}
+
+// Update users in a chat room
+export async function updateChatRoom(chatRoomRequest: chatRoomRecord) {
+  const updatedChatRoom = await getPrismaClient().chatRoom.update({
+    where: { id: chatRoomRequest.id },
+    data: {
+      users: {
+        connect: chatRoomRequest.userIds.map((id) => ({ id })),
+      },
+    },
+  });
+
+  return updatedChatRoom;
 }
 
 // Get a chat room by ID
@@ -21,18 +42,6 @@ export async function getChatRoomById(id: number) {
   });
 
   return chatRoom;
-}
-
-// Add a user to a chat room
-export async function addUserToChatRoom(chatRoomId: number, userId: number) {
-  const updatedChatRoom = await getPrismaClient().chatRoom.update({
-    where: { id: chatRoomId },
-    data: {
-      users: { connect: { id: userId } },
-    },
-  });
-
-  return updatedChatRoom;
 }
 
 // Remove a user from a chat room
