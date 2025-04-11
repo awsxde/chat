@@ -1,8 +1,11 @@
 import { AppError } from '@practica/error-handling';
-import { getUserByEmail, getUserById } from '../../data-access/user-repository';
+import {
+  findUserByEmailRepo,
+  findUserByIdRepo,
+} from '../../data-access/user-repository';
 
 export async function throwIfEmailExists(email: string) {
-  const user = await getUserByEmail(email);
+  const user = await findUserByEmailRepo(email);
 
   if (user) {
     throw new AppError(
@@ -15,7 +18,7 @@ export async function throwIfEmailExists(email: string) {
 }
 
 export async function throwIfIdNotExists(id: number) {
-  const user = await getUserById(id);
+  const user = await findUserByIdRepo(id);
 
   if (!user) {
     throw new AppError(

@@ -1,8 +1,8 @@
 import { AppError } from '@practica/error-handling';
-import * as userRepository from '../../data-access/user-repository';
+import { findUserByEmailRepo } from '../../data-access/user-repository';
 
-export async function getUserByEmail(email: string) {
-  const response = await userRepository.getUserByEmail(email);
+export async function findUserByEmailUseCase(email: string) {
+  const response = await findUserByEmailRepo(email);
 
   if (!response) {
     throw new AppError(
