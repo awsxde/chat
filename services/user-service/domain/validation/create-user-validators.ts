@@ -1,17 +1,17 @@
 import { AppError } from '@practica/error-handling';
 import ajv from '@practica/validation';
 import { ValidateFunction } from 'ajv';
-import { addUserDTO, addUserSchema } from '../user-schema';
+import { createUserDTO, createUserSchema } from '../user-schema';
 import { isValidEmail } from './email-validation';
 import { isStrongPassword } from './password-validation';
 
-export async function assertNewUserIsValid(newUserRequest: addUserDTO) {
+export async function assertNewUserIsValid(newUserRequest: createUserDTO) {
   // Since compiling a validation schema is expensive, we always try to use the cached version first
-  let validationSchema!: ValidateFunction<addUserDTO> | undefined;
-  validationSchema = ajv.getSchema<addUserDTO>('new-user');
+  let validationSchema!: ValidateFunction<createUserDTO> | undefined;
+  validationSchema = ajv.getSchema<createUserDTO>('new-user');
   if (!validationSchema) {
-    ajv.addSchema(addUserSchema, 'new-user');
-    validationSchema = ajv.getSchema<addUserDTO>('new-user');
+    ajv.addSchema(createUserSchema, 'new-user');
+    validationSchema = ajv.getSchema<createUserDTO>('new-user');
   }
 
   if (validationSchema === undefined) {

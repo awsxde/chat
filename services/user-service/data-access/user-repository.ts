@@ -9,7 +9,7 @@ type UserRecord = {
 };
 
 // ️️️✅ Best Practice: The repository pattern - Wrap the entire DB layer with a simple interface that returns plain JS objects
-export async function addUser(newUserRequest: Omit<UserRecord, 'id'>) {
+export async function createUserRepo(newUserRequest: Omit<UserRecord, 'id'>) {
   const resultUser = await getPrismaClient().user.create({
     data: { ...newUserRequest },
   });
@@ -17,7 +17,7 @@ export async function addUser(newUserRequest: Omit<UserRecord, 'id'>) {
   return resultUser;
 }
 
-export async function updateUser(updateUserRequest: UserRecord) {
+export async function updateUserRepo(updateUserRequest: UserRecord) {
   const resultUser = await getPrismaClient().user.update({
     where: { id: updateUserRequest.id },
     data: { ...updateUserRequest },
@@ -26,7 +26,7 @@ export async function updateUser(updateUserRequest: UserRecord) {
   return resultUser;
 }
 
-export async function getUserByEmail(email: string) {
+export async function findUserByEmailRepo(email: string) {
   const resultUser = await getPrismaClient().user.findUnique({
     where: {
       email,
@@ -36,7 +36,7 @@ export async function getUserByEmail(email: string) {
   return resultUser;
 }
 
-export async function getUserById(id: number) {
+export async function findUserByIdRepo(id: number) {
   const resultUser = await getPrismaClient().user.findUnique({
     where: {
       id,
@@ -46,7 +46,7 @@ export async function getUserById(id: number) {
   return resultUser;
 }
 
-export async function deleteUser(id: number) {
+export async function deleteUserRepo(id: number) {
   const deleteResult = await getPrismaClient().user.delete({
     where: {
       id,
