@@ -6,8 +6,8 @@ export const userSchema = Type.Object({
   password: Type.String(),
 });
 
-export const addUserSchema = Type.Omit(userSchema, ['id']);
+export const createUserSchema = Type.Omit(userSchema, ['id']);
 
-export type addUserDTO = Static<typeof addUserSchema>;
+export type createUserDTO = Static<typeof createUserSchema>;
 
 export type updateUserDTO = Static<typeof userSchema>;

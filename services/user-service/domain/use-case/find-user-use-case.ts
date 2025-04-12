@@ -1,8 +1,8 @@
 import { AppError } from '@practica/error-handling';
-import * as userRepository from '../../data-access/user-repository';
+import { findUserByIdRepo } from '../../data-access/user-repository';
 
-export async function getUser(userId: number) {
-  const response = await userRepository.getUserById(userId);
+export async function findUserByIdUseCase(userId: number) {
+  const response = await findUserByIdRepo(userId);
 
   if (!response) {
     throw new AppError(

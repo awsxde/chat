@@ -1,7 +1,7 @@
 import { AppError } from '@practica/error-handling';
 import ajv from '@practica/validation';
 import { ValidateFunction } from 'ajv';
-import { addUserSchema, updateUserDTO } from '../user-schema';
+import { updateUserDTO, userSchema } from '../user-schema';
 import { isValidEmail } from './email-validation';
 import { isStrongPassword } from './password-validation';
 
@@ -12,7 +12,7 @@ export async function assertUpdateUserIsValid(
   let validationSchema!: ValidateFunction<updateUserDTO> | undefined;
   validationSchema = ajv.getSchema<updateUserDTO>('update-user');
   if (!validationSchema) {
-    ajv.addSchema(addUserSchema, 'update-user');
+    ajv.addSchema(userSchema, 'update-user');
     validationSchema = ajv.getSchema<updateUserDTO>('update-user');
   }
 
