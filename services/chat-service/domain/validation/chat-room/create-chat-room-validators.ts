@@ -1,7 +1,7 @@
 import { AppError } from '@practica/error-handling';
 import ajv from '@practica/validation';
 import { ValidateFunction } from 'ajv';
-import { createChatRoomDTO, createChatRoomSchema } from '../chat-schema';
+import { createChatRoomDTO, createChatRoomSchema } from '../../chat-schema';
 
 export async function assertChatRoomIsValid(
   chatRoomRequest: createChatRoomDTO

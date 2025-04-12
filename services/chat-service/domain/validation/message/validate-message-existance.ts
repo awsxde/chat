@@ -1,8 +1,9 @@
 import { AppError } from '@practica/error-handling';
-import { getMessage } from '../../data-access/chat-repository';
+import { findMessageRepo } from '../../../data-access/chat-repository';
 
 export async function throwIfMessageNotExists(id: number) {
-  const message = await getMessage(id);
+  const message = await findMessageRepo(id);
+
   if (!message) {
     throw new AppError(
       'message-does-not-exists',

@@ -1,71 +1,68 @@
 import { logger } from '@practica/logger';
 import express from 'express';
 import util from 'util';
-import { createChatRoom } from '../../domain/use-case/create-chat-room-use-case';
-import { deleteChatRoom } from '../../domain/use-case/delete-chat-room-use-case';
-import { deleteMessage } from '../../domain/use-case/delete-message-use-case';
-import { getChatRoom } from '../../domain/use-case/get-chat-room-use-case';
-import { getMessages } from '../../domain/use-case/get-messages-use-case';
-import { removeUserFromChatRoom } from '../../domain/use-case/remove-user-from-chat-room-use-case';
-import { sendMessage } from '../../domain/use-case/send-message-use-case';
-import { updateChatRoom } from '../../domain/use-case/update-chat-room-use-case';
+import {
+  createChatRoomUseCase,
+  deleteChatRoomUseCase,
+  deleteUserFromChatRoomUseCase,
+  findChatRoomUseCase,
+  updateChatRoomUseCase,
+} from '../../domain/use-case/chat-room';
+import {
+  createMessageUseCase,
+  deleteMessageUseCase,
+  findMessagesUseCase,
+} from '../../domain/use-case/message';
 
 export default function defineRoutes(expressApp: express.Application) {
   const router = express.Router();
 
-  // Create a chat room
   router.post('/', async (req, res, next) => {
     try {
-      logger.info(`Chat API: Creating a chat room ${util.inspect(req.body)}`);
-      const chatRoom = await createChatRoom(req.body);
-      return res.status(201).json(chatRoom);
+      logger.info(`Chat API: creating a chat room ${util.inspect(req.body)}`);
+      const response = await createChatRoomUseCase(req.body);
+      return res.status(201).json(response);
     } catch (error) {
       next(error);
-      return undefined;
     }
   });
 
-  // Update a chat room
   router.put('/:id', async (req, res, next) => {
     try {
-      logger.info(`Chat API: Updating a chat room ${util.inspect(req.body)}`);
-      const chatRoom = await updateChatRoom(req.body);
-      return res.status(200).json(chatRoom);
+      logger.info(`Chat API: updating a chat room ${util.inspect(req.body)}`);
+      const response = await updateChatRoomUseCase(req.body);
+      return res.json(response);
     } catch (error) {
       next(error);
-      return undefined;
     }
   });
 
-  // Get a chat room by ID
   router.get('/:id', async (req, res, next) => {
     try {
-      logger.info(`Chat API: Fetching chat room with ID ${req.params.id}`);
-      const chatRoom = await getChatRoom(parseInt(req.params.id, 10));
-      return res.json(chatRoom);
+      logger.info(`Chat API: finding chat room with id ${req.params.id}`);
+      const response = await findChatRoomUseCase(parseInt(req.params.id, 10));
+      return res.json(response);
     } catch (error) {
       next(error);
     }
   });
 
-  // Delete a chat room
   router.delete('/:id', async (req, res, next) => {
     try {
-      logger.info(`Chat API: Deleting chat room with ID ${req.params.id}`);
-      await deleteChatRoom(parseInt(req.params.id, 10));
+      logger.info(`Chat API: deleting chat room with id ${req.params.id}`);
+      await deleteChatRoomUseCase(parseInt(req.params.id, 10));
       return res.status(204).end();
     } catch (error) {
       next(error);
     }
   });
 
-  // Remove a user from a chat room
   router.delete('/:id/users/:userId', async (req, res, next) => {
     try {
       logger.info(
-        `Chat API: Removing user ${req.params.userId} from chat room ${req.params.id}`
+        `Chat API: deleting user with id ${req.params.userId} from chat room ${req.params.id}`
       );
-      await removeUserFromChatRoom(
+      await deleteUserFromChatRoomUseCase(
         parseInt(req.params.id, 10),
         parseInt(req.params.userId, 10)
       );
@@ -75,36 +72,35 @@ export default function defineRoutes(expressApp: express.Application) {
     }
   });
 
-  // Send a message in a chat room
   router.post('/:id/messages', async (req, res, next) => {
     try {
-      logger.info(`Chat API: Sending message in chat room ${req.params.id}`);
-      const message = await sendMessage(parseInt(req.params.id, 10), req.body);
-      return res.status(201).json(message);
+      logger.info(`Chat API: creating a message in chat room ${req.params.id}`);
+      const response = await createMessageUseCase(
+        parseInt(req.params.id, 10),
+        req.body
+      );
+      return res.status(201).json(response);
     } catch (error) {
       next(error);
-      return undefined;
     }
   });
 
-  // Get messages in a chat room
   router.get('/:id/messages', async (req, res, next) => {
     try {
-      logger.info(`Chat API: Fetching messages for chat room ${req.params.id}`);
-      const messages = await getMessages(parseInt(req.params.id, 10));
-      return res.json(messages);
+      logger.info(`Chat API: finding messages for chat room ${req.params.id}`);
+      const response = await findMessagesUseCase(parseInt(req.params.id, 10));
+      return res.json(response);
     } catch (error) {
       next(error);
     }
   });
 
-  // Delete a message
   router.delete('/:id/messages/:messageId', async (req, res, next) => {
     try {
       logger.info(
-        `Chat API: Deleting a message with ID ${req.params.messageId}`
+        `Chat API: deleting a message with id ${req.params.messageId}`
       );
-      await deleteMessage(
+      await deleteMessageUseCase(
         parseInt(req.params.id, 10),
         parseInt(req.params.messageId, 10)
       );

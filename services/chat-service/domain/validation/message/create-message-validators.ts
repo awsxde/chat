@@ -1,7 +1,7 @@
 import { AppError } from '@practica/error-handling';
 import ajv from '@practica/validation';
 import { ValidateFunction } from 'ajv';
-import { createMessageDTO, createMessageSchema } from '../chat-schema';
+import { createMessageDTO, createMessageSchema } from '../../chat-schema';
 import { throwIfContentInvalid } from './validate-message-content';
 
 export async function assertMessageIsValid(messageRequest: createMessageDTO) {
