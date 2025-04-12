@@ -1,10 +1,10 @@
 import bcrypt from 'bcrypt';
-import * as userRepository from '../../data-access/user-repository';
-import { addUserDTO } from '../user-schema';
-import { assertNewUserIsValid } from '../validation/add-user-validators';
+import { createUserRepo } from '../../data-access/user-repository';
+import { createUserDTO } from '../user-schema';
+import { assertNewUserIsValid } from '../validation/create-user-validators';
 import { throwIfEmailExists } from '../validation/validate-user-existence';
 
-export async function addUser(newUser: addUserDTO) {
+export async function createUserUseCase(newUser: createUserDTO) {
   await assertNewUserIsValid(newUser);
   await throwIfEmailExists(newUser.email);
 
@@ -13,7 +13,7 @@ export async function addUser(newUser: addUserDTO) {
 
   const finalUserToSave = { ...newUser, password: hashedPassword };
 
-  const response = await userRepository.addUser(finalUserToSave);
+  const response = await createUserRepo(finalUserToSave);
 
   return response;
 }
