@@ -34,7 +34,7 @@ export default function defineRoutes(expressApp: express.Application) {
 
   router.get('/:id', async (req, res, next) => {
     try {
-      logger.info(`User API: getting user with id ${req.params.id}`);
+      logger.info(`User API: finding user with id ${req.params.id}`);
       const response = await findUserByIdUseCase(parseInt(req.params.id, 10));
       res.json(response);
     } catch (error) {
@@ -44,9 +44,9 @@ export default function defineRoutes(expressApp: express.Application) {
 
   router.get('/email/:email', async (req, res, next) => {
     try {
-      logger.info(`User API: getting user with email ${req.params.email}`);
-      const result = await findUserByEmailUseCase(req.params.email);
-      res.json(result);
+      logger.info(`User API: finding user with email ${req.params.email}`);
+      const response = await findUserByEmailUseCase(req.params.email);
+      res.json(response);
     } catch (error) {
       next(error);
     }
