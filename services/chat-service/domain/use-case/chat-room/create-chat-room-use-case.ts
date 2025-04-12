@@ -1,6 +1,6 @@
 import * as chatRepository from '../../../data-access/chat-repository';
 import { createChatRoomDTO } from '../../chat-schema';
-import { getUserById } from '../../get-user-by-id';
+import { findUserById } from '../../find-user-by-id';
 import { assertChatRoomIsValid } from '../../validation/chat-room/create-chat-room-validators';
 
 export async function createChatRoomUseCase(newChatRoom: createChatRoomDTO) {
@@ -8,7 +8,7 @@ export async function createChatRoomUseCase(newChatRoom: createChatRoomDTO) {
   // Check all users exist before proceeding
   await Promise.all(
     newChatRoom.userIds.map(async (userId) => {
-      await getUserById(userId);
+      await findUserById(userId);
     })
   );
 
