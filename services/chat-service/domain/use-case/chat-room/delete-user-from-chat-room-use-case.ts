@@ -1,4 +1,4 @@
-import * as chatRepository from '../../../data-access/chat-repository';
+import { deleteUserFromChatRoomRepo } from '../../../data-access/chat-repository';
 import { findUserById } from '../../find-user-by-id';
 import { throwIfChatRoomNotExists } from '../../validation/chat-room/validate-room-existence';
 
@@ -9,10 +9,7 @@ export async function deleteUserFromChatRoomUseCase(
   await throwIfChatRoomNotExists(chatRoomId);
   await findUserById(userId);
 
-  const response = await chatRepository.deleteUserFromChatRoomRepo(
-    chatRoomId,
-    userId
-  );
+  const response = await deleteUserFromChatRoomRepo(chatRoomId, userId);
 
   return response;
 }

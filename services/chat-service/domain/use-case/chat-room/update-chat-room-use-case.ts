@@ -1,4 +1,4 @@
-import * as chatRepository from '../../../data-access/chat-repository';
+import { updateChatRoomRepo } from '../../../data-access/chat-repository';
 import { updateChatRoomDTO } from '../../chat-schema';
 import { findUserById } from '../../find-user-by-id';
 import { assertChatRoomIsValid } from '../../validation/chat-room/update-chat-room-validators';
@@ -14,7 +14,7 @@ export async function updateChatRoomUseCase(chatRoom: updateChatRoomDTO) {
     })
   );
 
-  const response = await chatRepository.updateChatRoomRepo(chatRoom);
+  const response = await updateChatRoomRepo(chatRoom);
 
   return response;
 }

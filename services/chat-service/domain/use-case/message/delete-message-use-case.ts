@@ -1,4 +1,4 @@
-import * as chatRepository from '../../../data-access/chat-repository';
+import { deleteMessageRepo } from '../../../data-access/chat-repository';
 import { throwIfChatRoomNotExists } from '../../validation/chat-room/validate-room-existence';
 import { throwIfMessageNotExists } from '../../validation/message/validate-message-existance';
 
@@ -9,7 +9,7 @@ export async function deleteMessageUseCase(
   await throwIfChatRoomNotExists(chatRoomId);
   await throwIfMessageNotExists(messageId);
 
-  const response = await chatRepository.deleteMessageRepo(messageId);
+  const response = await deleteMessageRepo(messageId);
 
   return response;
 }

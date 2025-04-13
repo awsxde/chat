@@ -1,4 +1,4 @@
-import * as chatRepository from '../../../data-access/chat-repository';
+import { createChatRoomRepo } from '../../../data-access/chat-repository';
 import { createChatRoomDTO } from '../../chat-schema';
 import { findUserById } from '../../find-user-by-id';
 import { assertChatRoomIsValid } from '../../validation/chat-room/create-chat-room-validators';
@@ -12,7 +12,7 @@ export async function createChatRoomUseCase(newChatRoom: createChatRoomDTO) {
     })
   );
 
-  const response = await chatRepository.createChatRoomRepo(newChatRoom);
+  const response = await createChatRoomRepo(newChatRoom);
 
   return response;
 }

@@ -1,8 +1,8 @@
 import { AppError } from '@practica/error-handling';
-import * as chatRepository from '../../../data-access/chat-repository';
+import { findChatRoomByIdRepo } from '../../../data-access/chat-repository';
 
 export async function findChatRoomUseCase(chatRoomId: number) {
-  const response = await chatRepository.findChatRoomByIdRepo(chatRoomId);
+  const response = await findChatRoomByIdRepo(chatRoomId);
 
   if (!response) {
     throw new AppError(

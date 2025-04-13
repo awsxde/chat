@@ -1,4 +1,4 @@
-import * as chatRepository from '../../../data-access/chat-repository';
+import { createMessageRepo } from '../../../data-access/chat-repository';
 import { createMessageDTO } from '../../chat-schema';
 import { findUserById } from '../../find-user-by-id';
 import { throwIfChatRoomNotExists } from '../../validation/chat-room/validate-room-existence';
@@ -12,7 +12,7 @@ export async function createMessageUseCase(
   await findUserById(message.senderId);
   await assertMessageIsValid(message);
 
-  const response = await chatRepository.createMessageRepo(
+  const response = await createMessageRepo(
     chatRoomId,
     message.senderId,
     message.content
